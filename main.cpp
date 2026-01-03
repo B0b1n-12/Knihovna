@@ -4,8 +4,6 @@
 
 using namespace std;
 
-
-
 class Autor {
 private:
     string jmenoAutora;
@@ -64,6 +62,30 @@ public:
     }
 };
 
+class Library {
+private:
+    string jmenoKnihovny;
+    vector<Shelf> shelves;
+    vector<Kniha*> allBooks;
+public:
+    Library(const string& jmenoKnihovny):jmenoKnihovny(jmenoKnihovny){};
+    void addShelf(const string& nazev) {
+        Shelf novaPolice(nazev);
+        shelves.push_back(novaPolice);
+    }
+    void addBook(Kniha* k) {
+        allBooks.push_back(k);
+    }
+    void findBooksByAuthor(const string& authorName) const {
+        for (Kniha* k : allBooks) {
+            if(k->getAutor()->getName()==authorName) {
+                cout << k->getNazev() << endl;
+            }
+        }
+    }
+
+};
+
 int main() {
     Autor a1("Franz Kafka");
     Autor a2("George Orwell");
@@ -71,6 +93,7 @@ int main() {
     Kniha b1("Promena", &a1);
     Kniha b3("Proces", &a1);
     Kniha b2("Farma_zvirat", &a2);
+    Kniha b4("Barmske_dny", &a2);
 
     // OPRAVA: Voláme konstruktor jen s jedním parametrem (jméno police)
     Shelf jedna("Kafkova_police");
@@ -88,6 +111,25 @@ int main() {
 
     // OPRAVA: Voláme metodu, která skutečně existuje
     kafka.vypisKnihy();
+    Library mojeKnihovna("Mestska knihovna");
+
+    // 2. Přidání police (Kompozice)
+    // Knihovna si polici 'Klasika' vytvoří sama uvnitř sebe
+    mojeKnihovna.addShelf("Klasika");
+
+    // 3. Přidání knih do evidence knihovny (Agregace)
+    // Posíláme adresy (&) knih, které už v mainu máš
+    mojeKnihovna.addBook(&b1); // Promena
+    mojeKnihovna.addBook(&b3); // Proces
+    mojeKnihovna.addBook(&b2);
+    mojeKnihovna.addBook(&b4); // Farma zvirat
+
+    // 4. Test vyhledávání
+    cout << "--- Vyhledavani autora Franz Kafka ---" << endl;
+    mojeKnihovna.findBooksByAuthor("Franz Kafka");
+
+    cout << "\n--- Vyhledavani autora George Orwell ---" << endl;
+    mojeKnihovna.findBooksByAuthor("George Orwell");
 
     return 0;
 }
