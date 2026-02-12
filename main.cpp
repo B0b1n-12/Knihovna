@@ -87,49 +87,47 @@ public:
 };
 
 int main() {
-    Autor a1("Franz Kafka");
-    Autor a2("George Orwell");
 
-    Kniha b1("Promena", &a1);
-    Kniha b3("Proces", &a1);
-    Kniha b2("Farma_zvirat", &a2);
-    Kniha b4("Barmske_dny", &a2);
-
-    // OPRAVA: Voláme konstruktor jen s jedním parametrem (jméno police)
-    Shelf jedna("Kafkova_police");
-
-    cout << b1.getNazev() << endl;
-    cout << b1.isborrowed() << endl;
-
-    b1.borrow();
-    b1.returnbook();
-
-    // OPRAVA: Opět jen jeden parametr
-    Shelf kafka("Kafkova sekce");
-    kafka.addKniha(&b1);
-    kafka.addKniha(&b3);
-
-    // OPRAVA: Voláme metodu, která skutečně existuje
-    kafka.vypisKnihy();
     Library mojeKnihovna("Mestska knihovna");
 
-    // 2. Přidání police (Kompozice)
-    // Knihovna si polici 'Klasika' vytvoří sama uvnitř sebe
-    mojeKnihovna.addShelf("Klasika");
+    int volba = -1;
 
-    // 3. Přidání knih do evidence knihovny (Agregace)
-    // Posíláme adresy (&) knih, které už v mainu máš
-    mojeKnihovna.addBook(&b1); // Promena
-    mojeKnihovna.addBook(&b3); // Proces
-    mojeKnihovna.addBook(&b2);
-    mojeKnihovna.addBook(&b4); // Farma zvirat
 
-    // 4. Test vyhledávání
-    cout << "--- Vyhledavani autora Franz Kafka ---" << endl;
-    mojeKnihovna.findBooksByAuthor("Franz Kafka");
+    while (volba != 0) {
+        cout << "-----------------------------" << endl;
+        cout << "Vitejte v knihovne: " << "Mestska knihovna" << endl;
+        cout << "1. Pridat knihu" << endl;
+        cout << "2. Vypsat vsechny knihy (zatim nefunkcni)" << endl;
+        cout << "0. Ukoncit" << endl;
+        cout << "Vase volba: ";
 
-    cout << "\n--- Vyhledavani autora George Orwell ---" << endl;
-    mojeKnihovna.findBooksByAuthor("George Orwell");
+        cin >> volba;
+
+        switch (volba) {
+            case 1: {
+                string nazevKnihy;
+                string jmenoAutora;
+                cin.ignore();
+                cout << "Zadejte nazev knihy: ";
+                getline(cin, nazevKnihy);
+                cout << "Zadejte jmeno autora: ";
+                getline(cin, jmenoAutora);
+                Autor* novyAutor = new Autor(jmenoAutora);
+                Kniha* novaKniha = new Kniha(nazevKnihy, novyAutor);
+                mojeKnihovna.addBook(novaKniha);
+                cout << "--> Kniha '" << nazevKnihy << "' byla uspesne pridana do evidence." << endl;
+            }
+            break;
+            case 2:
+                cout << "Implementujeme pozdeji..." << endl;
+            break;
+            case 0:
+                cout << "Naschledanou!" << endl;
+            break;
+            default:
+                cout << "Neplatna volba, zkuste to znovu." << endl;
+        }
+    }
 
     return 0;
 }
